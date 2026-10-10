@@ -1,10 +1,10 @@
 name: Build and Release Signed APK
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
 
 jobs:
   build:
