@@ -9,10 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # যদি প্রোজেক্ট সাব-ফোল্ডারে থাকে তবে এই লাইনটি চালু করো এবং ফোল্ডারের নাম দাও:
-    # defaults:
-    #   run:
-    #     working-directory: ./YOUR_PROJECT_FOLDER_NAME
 
     steps:
     - name: Checkout Code
@@ -24,8 +20,9 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+    - name: Find and fix gradlew permission
+      run: |
+        find . -name "gradlew" -exec chmod +x {} \;
 
     - name: Build Signed Release APK
       env:
@@ -33,7 +30,12 @@ jobs:
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
-        ./gradlew assembleRelease \
+        GRADLEW_PATH=$(find . -name "gradlew" -print -quit)
+        if [ -z "$GRADLEW_PATH" ]; then
+          echo "Error: gradlew file not found anywhere!"
+          exit 1
+        fi
+        $GRADLEW_PATH assembleRelease \
           -Pandroid.injected.signing.store.file=my-upload-key.jks \
           -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
           -Pandroid.injected.signing.key.alias=$KEY_ALIAS \
