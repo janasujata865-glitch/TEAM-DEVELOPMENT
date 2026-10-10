@@ -1,0 +1,6 @@
+{
+  "name": "Desert Bird",
+  "description": "Desert-themed arcade bird game featuring a flying red bird, saguaro cactus obstacles, and sandy dunes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
