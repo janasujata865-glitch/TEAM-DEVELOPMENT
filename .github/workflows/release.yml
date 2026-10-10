@@ -20,9 +20,8 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Find and fix gradlew permission
-      run: |
-        find . -name "gradlew" -exec chmod +x {} \;
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
 
     - name: Build Signed Release APK
       env:
@@ -30,13 +29,8 @@ jobs:
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
-        GRADLEW_PATH=$(find . -name "gradlew" -print -quit)
-        if [ -z "$GRADLEW_PATH" ]; then
-          echo "Error: gradlew file not found anywhere!"
-          exit 1
-        fi
-        $GRADLEW_PATH assembleRelease \
-          -Pandroid.injected.signing.store.file=my-upload-key.jks \
+        ./gradlew assembleRelease \
+          -Pandroid.injected.signing.store.file=../my-upload-key.jks \
           -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
           -Pandroid.injected.signing.key.alias=$KEY_ALIAS \
           -Pandroid.injected.signing.key.password=$KEY_PASSWORD
