@@ -9,6 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # যদি প্রোজেক্ট সাব-ফোল্ডারে থাকে তবে এই লাইনটি চালু করো এবং ফোল্ডারের নাম দাও:
+    # defaults:
+    #   run:
+    #     working-directory: ./YOUR_PROJECT_FOLDER_NAME
 
     steps:
     - name: Checkout Code
@@ -21,8 +25,7 @@ jobs:
         java-version: '17'
 
     - name: Grant execute permission for gradlew
-      run: |
-        chmod +x ./gradlew
+      run: chmod +x gradlew
 
     - name: Build Signed Release APK
       env:
